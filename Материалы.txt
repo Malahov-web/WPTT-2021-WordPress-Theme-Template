@@ -1,0 +1,6 @@
+
+
+Сематнига HTML 5 - figure
+
+Сематнига HTML 5 - article
+https://ru.hexlet.io/blog/posts/kak-pravilno-ispolzovat-semanticheskie-tegi-article-i-section-nyuansy-html5-i-dostupnosti-saytov

@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all pages.
+ * The Template for displaying all single posts.
  *
  * @package WordPress
  * @subpackage malahov_web
@@ -50,6 +50,8 @@ $post_id = $post->ID;
 
             </article>
         </main>
+
+
 
 
 
