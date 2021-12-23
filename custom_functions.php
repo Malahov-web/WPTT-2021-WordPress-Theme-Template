@@ -22,9 +22,9 @@ TODO:
  * renderLogo()
  */
 
-if ( ! function_exists( 'renderLogo' ) ) {
+if ( ! function_exists( '__renderLogo' ) ) {
 
-	function renderLogo( $logo_class = '' ) {
+	function __renderLogo( $logo_class = '' ) {
 
 		if ( is_front_page()  ) {
 			$logo_href = '#';
@@ -43,6 +43,39 @@ if ( ! function_exists( 'renderLogo' ) ) {
 		</div>
 
 		<?php		
+	}
+
+}
+
+
+if ( ! function_exists( 'renderLogo' ) ) {
+
+	function renderLogo( $logo_class = '' ) {
+
+        // Front page
+		if ( is_front_page()  ) {
+        ?>
+
+            <div class="logo <?php echo $logo_class; ?>">
+                <span>
+                    <img src="<?php echo get_template_directory_uri(); // Ссылка на папку темы ?>/images/logo.png" alt="<?php echo get_bloginfo('name'); ?>">
+                </span>
+            </div>
+
+        <?php
+        // Inner pages
+		} else {
+        ?>
+
+            <div class="logo <?php echo $logo_class; ?>">
+                <a href="/">
+                    <img src="<?php echo get_template_directory_uri(); // Ссылка на папку темы ?>/images/logo.png" alt="<?php echo get_bloginfo('name'); ?>">
+                </a>
+            </div>
+
+        <?php
+		}
+	
 	}
 
 }

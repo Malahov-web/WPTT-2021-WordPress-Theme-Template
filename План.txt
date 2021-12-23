@@ -1,9 +1,12 @@
-
+? 07.0x
+  wptt2021  :install, :deploy;
+  header.php, front-page.php (1)
 
 04.0x
-...
-Сделать в *.php-шаблонах
-семантическиую html-разметку, см. стандартные WP-тему
+  page.php, single.php, category.php (1)
+
+...Сделать в *.php-шаблонах
+семантическиую html-разметку, см. стандартные WP-тему 
 
 
 ----

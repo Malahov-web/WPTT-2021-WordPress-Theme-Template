@@ -1,0 +1,12 @@
+
+
+DB:
+
+wptt2021_db
+root
+
+
+WP:
+
+admin
+M1^TnCAbW$^@lUrkyi
