@@ -3,9 +3,11 @@
 /*
  * 1. acf_add_options_page()  - add options page in main menu
  * 2. add_excerpt_for_pages() - add excerpt for page type
- * 3. svg_upload_allow() - add avg type for files to upload in admin
- * 
- *
+ * 3. svg_upload_allow() - add svg type for files to upload in admin
+ * 4. my_theme_add_editor_styles() - add my theme styles to editor
+ * 5. add_styles_formats_to_editor() - add custom styles formats to mce editor in admin
+ * 6. true_apply_tags_for_pages() - add my theme styles to editor
+ * 7. add_post_columns() - add and fill post columns in page list in admin
  *
  *
  *
@@ -47,64 +49,74 @@ add_action('init', 'add_excerpt_for_pages');
 
 
 
-// SVG upload to admin
-add_filter( 'upload_mimes', 'svg_upload_allow' );
+/*
+ *  3. SVG upload to admin
+ *
+*//***************************************************************************************/
 
-# Добавляет SVG в список разрешенных для загрузки файлов.
-function svg_upload_allow( $mimes ) {
-	$mimes['svg']  = 'image/svg+xml';
+// Подключение файлов
+get_template_part( 'functions/admin/svg_upload_allow' ); // без расширения
 
-	return $mimes;
+
+
+
+// Добавление стилей темы для контента в редакторе 
+/*
+ * my_theme_add_editor_styles()
+ */
+
+add_action( 'after_setup_theme', 'my_theme_add_editor_styles' );
+
+function my_theme_add_editor_styles() {
+
+	add_editor_style( 'css/editor-styles.css' );
+	// необходимая поддержка add_theme_support( 'editor-style' ); активируется автоматом
 }
 
 
-add_filter( 'wp_check_filetype_and_ext', 'fix_svg_mime_type', 10, 5 );
 
-# Исправление MIME типа для SVG файлов.
-function fix_svg_mime_type( $data, $file, $filename, $mimes, $real_mime = '' ){
 
-	// WP 5.1 +
-	if( version_compare( $GLOBALS['wp_version'], '5.1.0', '>=' ) )
-		$dosvg = in_array( $real_mime, [ 'image/svg', 'image/svg+xml' ] );
-	else
-		$dosvg = ( '.svg' === strtolower( substr($filename, -4) ) );
+/*
+ *  5. add custom styles formats to mce editor in admin
+ *
+*//***************************************************************************************/
 
-	// mime тип был обнулен, поправим его
-	// а также проверим право пользователя
-	if( $dosvg ){
+// Подключение файлов
+get_template_part( 'functions/admin/add_styles_formats_to_editor' ); // без расширения
 
-		// разрешим
-		if( current_user_can('manage_options') ){
 
-			$data['ext']  = 'svg';
-			$data['type'] = 'image/svg+xml';
-		}
-		// запретим
-		else {
-			$data['ext'] = $type_and_ext['type'] = false;
-		}
 
-	}
 
-	return $data;
+// Добавляем метки к страницам 
+/*
+ * true_apply_tags_for_pages()
+ */
+
+function true_apply_tags_for_pages(){
+	add_meta_box( 'tagsdiv-post_tag', 'Теги', 'post_tags_meta_box', 'page', 'side', 'normal' ); // сначала добавляем метабокс меток
+	register_taxonomy_for_object_type('post_tag', 'page'); // затем включаем их поддержку страницами wp
 }
-
-
-add_filter( 'wp_prepare_attachment_for_js', 'show_svg_in_media_library' );
-
-# Формирует данные для отображения SVG как изображения в медиабиблиотеке.
-function show_svg_in_media_library( $response ) {
-
-	if ( $response['mime'] === 'image/svg+xml' ) {
-
-		// С выводом названия файла
-		$response['image'] = [
-			'src' => $response['url'],
-		];
-	}
-
-	return $response;
+ 
+add_action('admin_init','true_apply_tags_for_pages');
+ 
+function true_expanded_request_post_tags($q) {
+	if (isset($q['tag'])) // если в запросе присутствует параметр метки
+		$q['post_type'] = array('post', 'page');
+	return $q;
 }
+ 
+add_filter('request', 'true_expanded_request_post_tags');
+
+
+
+
+/*
+ *  7. add and fill post columns in page list in admin
+ *
+*//***************************************************************************************/
+
+// Подключение файлов
+get_template_part( 'functions/admin/add_post_columns' ); // без расширения
 
 
 
